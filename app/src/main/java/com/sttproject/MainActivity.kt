@@ -22,10 +22,7 @@ import android.support.v4.app.ActivityCompat
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
-import android.content.ComponentName
 import android.content.Context
-import android.content.Context.DEVICE_POLICY_SERVICE
-
 
 
 
@@ -35,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         getPermission()
 
         mainFab.onClick {
@@ -56,8 +52,6 @@ class MainActivity : AppCompatActivity() {
     fun getPermission() {
         val devicePolicyManager = applicationContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
 
-//        val componentName = ComponentName(applicationContext, ShutdownConfigAdminReceiver::class.java!!)
-
         if (!devicePolicyManager.isAdminActive(componentName) || ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
                 ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
                 ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED) {
@@ -66,7 +60,10 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, 0)
 
             ActivityCompat.requestPermissions(this@MainActivity,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO), 0)
+                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO),
+                    0)
         }
     }
 
@@ -74,12 +71,11 @@ class MainActivity : AppCompatActivity() {
                                             permissions: Array<String>, grantResults: IntArray) {
         if (requestCode == 0) {
             if (grantResults[0] == 0) {
-                Toast.makeText(this, "권한이 승인됨", Toast.LENGTH_SHORT).show()
+
             } else {
                 Toast.makeText(this, "권한이 거절 되었습니다. 앱을 이용하려면 권한을 승낙하여야 합니다.", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
     }
-
 }

@@ -11,26 +11,9 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import android.media.MediaPlayer
-import android.support.v4.app.ActivityCompat
-import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
-import android.Manifest.permission
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.Manifest.permission.RECORD_AUDIO
 import android.util.Log
-import java.nio.file.Files.exists
-
-
-
-
-
-
-
 
 class RecodeActivity : AppCompatActivity(){
-    private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 100
-    private val MY_PERMISSIONS_REQUEST_RECORD_AUDIO = 200
-
     var player : MediaPlayer? = null
     var recorder : MediaRecorder? = null
     var path = ""
