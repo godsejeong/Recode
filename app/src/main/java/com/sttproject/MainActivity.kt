@@ -6,37 +6,50 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.toast
-import pub.devrel.easypermissions.EasyPermissions
 import android.widget.Toast
-import android.support.annotation.NonNull
-import android.Manifest.permission
-import android.Manifest.permission.ACCESS_NETWORK_STATE
-import android.Manifest.permission.RECEIVE_BOOT_COMPLETED
-import android.Manifest.permission.READ_PHONE_STATE
-import android.Manifest.permission.DISABLE_KEYGUARD
-import android.Manifest.permission.RECORD_AUDIO
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.support.v4.app.ActivityCompat
 import android.app.admin.DevicePolicyManager
 import android.content.pm.PackageManager
 import android.support.v4.content.ContextCompat
 import android.content.Context
-
+import android.net.Uri
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
+import com.sttproject.MainActivity.Companion.todaycode
+import java.io.Serializable
+import java.text.SimpleDateFormat
+import java.util.*
+import android.R.id.edit
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var todaycode = "10"
+    }
     val RESULT_CODE = 100
-
+    var image = ""
+    var items : ArrayList<RecordListData> = ArrayList()
+    lateinit var adapter : RecordRecylcerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         getPermission()
+        var layoutmanager = LinearLayoutManager(this)
+        mainList.layoutManager = layoutmanager
+        loadData()
+        adapter = RecordRecylcerAdapter(items,this)
+        mainList.adapter = adapter
+
 
         mainFab.onClick {
-            var intent = Intent(applicationContext, RecodeActivity::class.java)
-            startActivityForResult(intent, RESULT_CODE)
+            var intent = Intent(applicationContext,EdiTitleDialog::class.java)
+            startActivityForResult(intent,200)
+
         }
     }
 
@@ -44,7 +57,33 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             if (requestCode == RESULT_CODE) {
+                var date = SimpleDateFormat("yyyy-MM-dd")
+                var mNow = System.currentTimeMillis()
+                var mDate = Date(mNow)
+                var mday = date.format(mDate)
 
+                Log.e("today", todaycode)
+                Log.e("date",mday.toString())
+                if(todaycode != mday){
+                    Log.e("today", todaycode)
+                    todaycode = mday
+                    items.add(RecordListData(null,null,null,null,mday,1))
+                }
+
+                var title = data!!.getStringExtra("title")
+                var content = data!!.getStringExtra("content")
+                var path = data!!.getStringExtra("record")
+
+                items.add(RecordListData(title,content,path,image,null,0))
+                adapter.notifyDataSetChanged()
+                saveData()
+            }
+
+            if(requestCode == 200){
+                var intent = Intent(applicationContext, RecordActivity::class.java)
+                intent.putExtra("title",data!!.getStringExtra("title"))
+                image = data!!.getStringExtra("img")
+                startActivityForResult(intent, RESULT_CODE)
             }
         }
     }
@@ -78,4 +117,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    fun loadData() {
+        val gson = Gson()
+        val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val json = pref.getString("save", "")
+        var shareditems: ArrayList<RecordListData>?
+        shareditems = gson.fromJson(json, object : TypeToken<ArrayList<RecordListData>>() {}.type)
+        if (shareditems != null) items.addAll(shareditems)
+    }
+    fun saveData() { //items 안의 내용이 저장됨
+        val pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        val editor = pref.edit()
+        val json = Gson().toJson(items)
+        editor.putString("save", json)
+        Log.d("asdf", json)
+        editor.commit()
+    }
+
 }
