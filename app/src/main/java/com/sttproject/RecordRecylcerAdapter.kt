@@ -3,6 +3,7 @@ package com.sttproject
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +14,6 @@ import com.bumptech.glide.Glide
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.sdk25.coroutines.onLongClick
 import org.jetbrains.anko.startActivity
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v4.view.accessibility.AccessibilityEventCompat.setAction
-
-
-
-
 
 class RecordRecylcerAdapter(items : ArrayList<RecordListData>,context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     var items: ArrayList<RecordListData> = ArrayList()
@@ -67,10 +62,9 @@ class RecordRecylcerAdapter(items : ArrayList<RecordListData>,context: Context) 
         holder.itemView.onLongClick {
             //공유
             var i = Intent(Intent.ACTION_SEND)
-            i.action = android.content.Intent.ACTION_VIEW
-            i.setDataAndType(Uri.parse(data.path), "audio/*")
-
-            contexts!!.startActivity(Intent.createChooser(i,"공유"))
+            i.type = "audio/*"
+            i.putExtra(Intent.EXTRA_STREAM,Uri.parse("file://"+data.path))
+            contexts?.startActivity(Intent.createChooser(i,"공유"))
         }
 
         holder.itemView.onClick {

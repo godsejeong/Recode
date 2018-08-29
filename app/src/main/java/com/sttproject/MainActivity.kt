@@ -28,9 +28,11 @@ import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
+
     companion object {
         var todaycode = "10"
     }
+
     val RESULT_CODE = 100
     var image = ""
     var items : ArrayList<RecordListData> = ArrayList()
@@ -62,11 +64,11 @@ class MainActivity : AppCompatActivity() {
                 var mDate = Date(mNow)
                 var mday = date.format(mDate)
 
-                Log.e("today", todaycode)
+                Log.e("today", MainActivity.todaycode)
                 Log.e("date",mday.toString())
-                if(todaycode != mday){
-                    Log.e("today", todaycode)
-                    todaycode = mday
+                if(MainActivity.todaycode != mday){
+                    Log.e("today", MainActivity.todaycode)
+                    MainActivity.todaycode = mday
                     items.add(RecordListData(null,null,null,null,mday,1))
                 }
 

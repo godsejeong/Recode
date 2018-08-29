@@ -75,6 +75,7 @@ class RecordActivity : AppCompatActivity() {
         recordRemove.onClick {
             if (path != null) {
                 path = null
+                recordTimer.text = "00:00:00"
                 toast("삭제완료")
             } else {
                 toast("녹음파일이 존재하지 않습니다.")
