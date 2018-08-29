@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 var mDate = Date(mNow)
                 var mday = date.format(mDate)
 
-                Log.e("today", MainActivity.todaycode)
+                Log.e("today", MainActivity.todaycode) 
                 Log.e("date",mday.toString())
                 if(MainActivity.todaycode != mday){
                     Log.e("today", MainActivity.todaycode)

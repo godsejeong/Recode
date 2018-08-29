@@ -30,6 +30,7 @@ class RecordActivity : AppCompatActivity() {
     var path: String? = null
     var recordcheck = true
     var title = ""
+            // TimerTast timg = new TimerTest()
     var time = timmer()
     var recognizer: SpeechRecognizer? = null
     override fun onCreate(savedInstanceState: Bundle?) {

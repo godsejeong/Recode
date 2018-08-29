@@ -20,7 +20,7 @@ class EdiTitleDialog : Activity() {
         setContentView(R.layout.activity_edi_title_dialog)
         val popupView = layoutInflater.inflate(R.layout.activity_edi_title_dialog, null)
         var mPopupWindow = PopupWindow(popupView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-
+//        mPopupWindow.
 
         dialogClear.onClick {
             finish()
